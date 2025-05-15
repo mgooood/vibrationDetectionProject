@@ -37,8 +37,16 @@ ENV/
 vibration_output/
 *.log
 
+# Test files
+__pycache__/
+.coverage
+htmlcov/
+*.pyc
+*.pyo
+*.pyd
+
 # Dependencies
-requirements.txt
+*.egg-info/
 
 # Local development
 *.pyc

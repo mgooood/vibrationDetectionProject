@@ -12,10 +12,13 @@ This project detects vibrations using an ADXL345 sensor and takes pictures when 
 ## Software Requirements
 
 - Python 3 (comes with Raspberry Pi)
-- Required Python packages:
-  - smbus
-  - picamera
-  - adxl345
+- Required Python packages (listed in requirements.txt):
+  - smbus: For I2C communication with the ADXL345 sensor
+  - picamera: For controlling the Raspberry Pi camera
+  - adxl345: Library for interfacing with the ADXL345 sensor
+  - pytest: For running tests
+  - pytest-mock: For mocking hardware interfaces in tests
+  - coverage: For measuring test coverage
 
 ## Setup Instructions
 
@@ -29,9 +32,11 @@ This project detects vibrations using an ADXL345 sensor and takes pictures when 
 
 3. Install the required Python packages:
    ```bash
-   sudo apt-get install python3-smbus
-   sudo pip3 install picamera
-   sudo pip3 install adxl345
+   # Install system package
+   sudo apt install python3-smbus
+   
+   # Install Python packages from requirements.txt
+   pip3 install -r requirements.txt
    ```
 
 4. Run the script:
@@ -53,6 +58,32 @@ This project detects vibrations using an ADXL345 sensor and takes pictures when 
 - `vibration_detector.py`: The main Python script
 - `vibration_log.txt`: Log file containing vibration data
 - `vibration_pictures/`: Directory where pictures are saved
+- `tests/`: Directory containing test files
+
+## Testing
+
+This project includes unit tests to verify the functionality of the vibration detection system.
+
+### Running Tests
+
+To run the tests, you need:
+1. The Raspberry Pi hardware (ADXL345 sensor and Pi Camera)
+2. All required dependencies installed
+
+Run the tests using:
+```bash
+pytest tests/
+```
+
+To get test coverage:
+```bash
+coverage run -m pytest tests/
+coverage report
+```
+
+### Mocking Hardware
+
+Some tests can be run without hardware by mocking the sensor and camera interfaces. However, for complete testing, the hardware must be connected to the Raspberry Pi.
 
 ## Configuration
 
@@ -66,3 +97,6 @@ You can adjust the following settings in the script:
 - Make sure the I2C interface is enabled on your Raspberry Pi
 - The script runs continuously until interrupted (Ctrl+C)
 - Adjust the `VIBRATION_THRESHOLD` based on your specific needs and environment
+- Some tests require hardware to be connected to the Raspberry Pi
+- The ADXL345 sensor must be properly connected to the I2C bus
+- The Pi Camera must be connected to the camera port

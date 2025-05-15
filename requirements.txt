@@ -1,0 +1,6 @@
+smbus
+picamera
+adxl345
+pytest
+pytest-mock
+coverage
