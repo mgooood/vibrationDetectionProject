@@ -73,19 +73,50 @@ def init_sensor():
 
 # Initialize the camera
 def init_camera():
-    """Initialize the Pi Camera
+    """Initialize the Pi Camera with optimized settings for smaller file size
     
     Returns:
         Picamera2: The initialized camera object
     """
     try:
         camera = Picamera2()
-        # Configure camera with default still configuration
-        camera_config = camera.create_still_configuration()
-        camera.configure(camera_config)
+        
+        # Configure camera with optimized settings
+        config = camera.create_still_configuration(
+            main={"size": (1024, 768)},  # Reduced resolution
+            # Disable the higher resolution "lores" stream
+            lores=None,
+            # Use JPEG format with quality setting (1-100, lower = more compression)
+            format="jpeg",
+            # Adjust quality (1-100, lower = more compression)
+            quality=50,
+            # Use YUV420 color space for better compression
+            color_space="YUV420"
+        )
+        
+        # Additional camera controls
+        controls = {
+            # Lower the framerate to reduce processing
+            "FrameRate": 15,
+            # Auto white balance
+            "AwbMode": "auto",
+            # Auto exposure
+            "AeEnable": True,
+            # Auto exposure metering mode (average)
+            "AeMeteringMode": "centre",
+        }
+        
+        # Apply the configuration
+        camera.configure(config)
+        camera.set_controls(controls)
         camera.start()
-        print("Camera initialized successfully")
+        
+        # Allow time for AWB to settle
+        time.sleep(1)
+        
+        print("Camera initialized successfully with optimized settings")
         return camera
+        
     except Exception as e:
         print(f"Error initializing camera: {str(e)}")
         return None
@@ -122,10 +153,11 @@ def log_vibration(magnitude, timestamp):
     except Exception as e:
         print(f"Error writing to log file: {str(e)}")
 
-def take_picture(timestamp):
+def take_picture(camera, timestamp):
     """Take a picture and save it with a timestamp in the filename
     
     Args:
+        camera: The initialized camera object
         timestamp (str): The timestamp to use in the filename
     """
     try:
@@ -174,7 +206,7 @@ def main():
                 log_vibration(magnitude, timestamp)
                 
                 # Take a picture
-                take_picture(timestamp)
+                take_picture(camera, timestamp)
                 
                 # Add a small delay to avoid multiple triggers
                 time.sleep(2)

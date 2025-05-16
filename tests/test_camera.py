@@ -27,22 +27,24 @@ class TestCamera(unittest.TestCase):
     def test_take_picture(self):
         """Test taking a picture"""
         timestamp = "test_timestamp"
-        take_picture(timestamp)
+        mock_camera = MagicMock()
+        take_picture(mock_camera, timestamp)
         
         # Verify that the camera's capture_file method was called
-        self.mock_camera.capture_file.assert_called_once()
+        mock_camera.capture_file.assert_called_once()
         
     def test_picture_naming(self):
         """Test that pictures are named correctly"""
         timestamp = "20230515_160000"
-        take_picture(timestamp)
+        mock_camera = MagicMock()
+        take_picture(mock_camera, timestamp)
         
         # Verify the picture was saved with the correct name
         expected_filename = f"vibration_{timestamp}.jpg"
         expected_path = os.path.join("vibration_output", "vibration_pictures", expected_filename)
         
         # Verify the camera's capture_file method was called with the correct path
-        self.mock_camera.capture_file.assert_called_with(expected_path)
+        mock_camera.capture_file.assert_called_with(expected_path)
 
 if __name__ == '__main__':
     unittest.main()
