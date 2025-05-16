@@ -1,4 +1,4 @@
-smbus
+smbus2
 picamera
 adxl345
 pytest

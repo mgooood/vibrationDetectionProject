@@ -13,7 +13,7 @@ This project detects vibrations using an ADXL345 sensor and takes pictures when 
 
 - Python 3 (comes with Raspberry Pi)
 - Required Python packages (listed in requirements.txt):
-  - smbus: For I2C communication with the ADXL345 sensor
+  - smbus2: Modern Python library for I2C communication with the ADXL345 sensor (replaces the older smbus)
   - picamera: For controlling the Raspberry Pi camera
   - adxl345: Library for interfacing with the ADXL345 sensor
   - pytest: For running tests
@@ -30,14 +30,17 @@ This project detects vibrations using an ADXL345 sensor and takes pictures when 
 
 2. Connect the Pi Camera to the camera port on the Raspberry Pi
 
-3. Install the required Python packages:
+3. Install the required system packages and Python dependencies:
    ```bash
-   # Install system package
-   sudo apt install python3-smbus
+   # Install system-level I2C interface for Python 3
+   sudo apt update
+   sudo apt install -y python3-smbus
    
    # Install Python packages from requirements.txt
    pip3 install -r requirements.txt
    ```
+   
+   Note: The `python3-smbus` package provides the system-level I2C interface, while `smbus2` (installed via pip) provides the Python bindings to interact with it.
 
 4. Run the script:
    ```bash
