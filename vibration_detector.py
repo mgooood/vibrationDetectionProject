@@ -155,7 +155,6 @@ def log_vibration(magnitude, timestamp):
 
 def take_picture(camera, timestamp):
     """Take a picture and save it with a timestamp in the filename
-    Optimized for speed while maintaining reasonable file size.
     
     Args:
         camera: The initialized camera object
@@ -165,14 +164,8 @@ def take_picture(camera, timestamp):
         picture_name = f"vibration_{timestamp}.jpg"
         picture_path = os.path.join(PICTURE_DIR, picture_name)
         
-        # Fast capture with optimized settings
-        camera.capture_file(
-            picture_path,
-            format='jpeg',
-            quality=50,          # Balanced quality/size (1-100)
-            thumbnail=None,      # No thumbnail for speed
-            bayer=True           # Faster processing
-        )
+        # Simple capture with just the file path
+        camera.capture_file(picture_path)
         
         print(f"Picture taken and saved as: {picture_name}")
     except Exception as e:
