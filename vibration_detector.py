@@ -16,7 +16,7 @@ import time
 import datetime
 import os
 import smbus
-import picamera
+from picamera2 import Picamera2
 from adxl345 import ADXL345  # This library provides the interface to communicate with the ADXL345 accelerometer
 # It handles all the low-level I2C communication and data conversion for us
 # Without this library, we would need to write complex I2C communication code ourselves
@@ -47,10 +47,14 @@ def init_camera():
     """Initialize the Pi Camera
     
     Returns:
-        picamera.PiCamera: The initialized camera object
+        Picamera2: The initialized camera object
     """
     try:
-        camera = picamera.PiCamera()
+        camera = Picamera2()
+        # Configure camera with default still configuration
+        camera_config = camera.create_still_configuration()
+        camera.configure(camera_config)
+        camera.start()
         print("Camera initialized successfully")
         return camera
     except Exception as e:
@@ -98,7 +102,8 @@ def take_picture(timestamp):
     try:
         picture_name = f"vibration_{timestamp}.jpg"
         picture_path = os.path.join(PICTURE_DIR, picture_name)
-        camera.capture(picture_path)
+        # Capture and save the image
+        camera.capture_file(picture_path)
         print(f"Picture taken and saved as: {picture_name}")
     except Exception as e:
         print(f"Error taking picture: {str(e)}")

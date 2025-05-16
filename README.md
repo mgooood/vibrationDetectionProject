@@ -12,13 +12,14 @@ This project detects vibrations using an ADXL345 sensor and takes pictures when 
 ## Software Requirements
 
 - Python 3 (comes with Raspberry Pi)
-- Required Python packages (listed in requirements.txt):
-  - smbus2: Modern Python library for I2C communication with the ADXL345 sensor (replaces the older smbus)
-  - picamera: For controlling the Raspberry Pi camera
-  - adxl345: Library for interfacing with the ADXL345 sensor
-  - pytest: For running tests
-  - pytest-mock: For mocking hardware interfaces in tests
-  - coverage: For measuring test coverage
+- Required system packages (installed via apt):
+  - python3-smbus: System-level I2C interface for Python 3
+  - python3-picamera2: Modern Python library for controlling the Raspberry Pi camera
+  - python3-libcamera: Required camera support library
+  - python3-adxl345: Library for interfacing with the ADXL345 sensor
+  - python3-pytest: For running tests
+  - python3-pytest-mock: For mocking hardware interfaces in tests
+  - python3-coverage: For measuring test coverage
 
 ## Setup Instructions
 
@@ -30,17 +31,21 @@ This project detects vibrations using an ADXL345 sensor and takes pictures when 
 
 2. Connect the Pi Camera to the camera port on the Raspberry Pi
 
-3. Install the required system packages and Python dependencies:
+3. Install all required system packages:
    ```bash
-   # Install system-level I2C interface for Python 3
+   # Update package lists and install required packages
    sudo apt update
-   sudo apt install -y python3-smbus
-   
-   # Install Python packages from requirements.txt
-   pip3 install -r requirements.txt
+   sudo apt install -y \
+       python3-smbus \
+       python3-picamera2 \
+       python3-libcamera \
+       python3-adxl345 \
+       python3-pytest \
+       python3-pytest-mock \
+       python3-coverage
    ```
    
-   Note: The `python3-smbus` package provides the system-level I2C interface, while `smbus2` (installed via pip) provides the Python bindings to interact with it.
+   Note: All dependencies are installed via the system package manager for better compatibility with Raspberry Pi OS.
 
 4. Run the script:
    ```bash
