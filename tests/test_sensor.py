@@ -5,7 +5,7 @@ Test suite for the ADXL345 sensor functionality
 import unittest
 from unittest.mock import MagicMock
 import smbus
-from adxl345 import ADXL345
+from vibration_detector import ADXL345
 
 class TestADXL345Sensor(unittest.TestCase):
     """Test cases for ADXL345 sensor functionality"""

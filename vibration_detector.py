@@ -17,7 +17,36 @@ import datetime
 import os
 import smbus
 from picamera2 import Picamera2
-from adxl345 import ADXL345  # This library provides the interface to communicate with the ADXL345 accelerometer
+
+# Import ADXL345 class from a local module
+class ADXL345:
+    """
+    Local ADXL345 implementation that matches the expected interface.
+    This is a placeholder - in a real implementation, this would be the actual ADXL345 driver.
+    """
+    def __init__(self):
+        self.bus = smbus.SMBus(1)  # 1 indicates /dev/i2c-1
+        # Initialize the ADXL345
+        self.bus.write_byte_data(0x53, 0x2D, 0x08)  # Power control
+        self.bus.write_byte_data(0x53, 0x31, 0x0B)  # Data format control
+        self.bus.write_byte_data(0x53, 0x2C, 0x09)  # Rate
+
+    def getAxes(self, gforce=False):
+        """Get acceleration data for all axes"""
+        bytes = self.bus.read_i2c_block_data(0x53, 0x32, 6)
+        x = bytes[0] | (bytes[1] << 8)
+        if x > 32767: x -= 65536
+        y = bytes[2] | (bytes[3] << 8)
+        if y > 32767: y -= 65536
+        z = bytes[4] | (bytes[5] << 8)
+        if z > 32767: z -= 65536
+        
+        # Convert to G's
+        x = x * 0.004 * 9.80665 if gforce else x * 0.004
+        y = y * 0.004 * 9.80665 if gforce else y * 0.004
+        z = z * 0.004 * 9.80665 if gforce else z * 0.004
+        
+        return {'x': x, 'y': y, 'z': z}
 # It handles all the low-level I2C communication and data conversion for us
 # Without this library, we would need to write complex I2C communication code ourselves
 
