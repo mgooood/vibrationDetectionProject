@@ -81,29 +81,29 @@ def init_camera():
     try:
         camera = Picamera2()
         
-        # Configure camera with optimized settings
+        # Configure camera for fast capture with optimized settings
         config = camera.create_still_configuration(
-            main={"size": (1024, 768)},  # Reduced resolution
-            # Disable the higher resolution "lores" stream
-            lores=None,
-            # Use JPEG format with quality setting (1-100, lower = more compression)
-            format="jpeg",
-            # Adjust quality (1-100, lower = more compression)
-            quality=50,
-            # Use YUV420 color space for better compression
-            color_space="YUV420"
+            main={
+                "size": (800, 600),  # Balanced resolution
+                "format": "YUV420"    # Efficient color space
+            },
+            lores=None,      # Disable secondary stream
+            buffer_count=2,  # Minimum buffers for performance
+            queue=False      # Don't queue frames
         )
         
-        # Additional camera controls
+        # Optimized controls for speed
         controls = {
-            # Lower the framerate to reduce processing
-            "FrameRate": 15,
-            # Auto white balance
-            "AwbMode": "auto",
-            # Auto exposure
-            "AeEnable": True,
-            # Auto exposure metering mode (average)
+            "FrameRate": 30,           # Standard frame rate
+            "NoiseReductionMode": "off",  # Disable for speed
+            "AwbEnable": True,         # Auto white balance for accuracy
+            "AeEnable": True,          # Auto exposure
+            "AeExposureMode": "sports", # Optimized for speed
             "AeMeteringMode": "centre",
+            "AnalogueGain": 1.0,       # Standard gain
+            "Saturation": 1.0,         # Normal saturation
+            "Sharpness": 0.5,          # Slight sharpness
+            "Contrast": 1.0            # Standard contrast
         }
         
         # Apply the configuration
@@ -155,6 +155,7 @@ def log_vibration(magnitude, timestamp):
 
 def take_picture(camera, timestamp):
     """Take a picture and save it with a timestamp in the filename
+    Optimized for speed while maintaining reasonable file size.
     
     Args:
         camera: The initialized camera object
@@ -163,8 +164,16 @@ def take_picture(camera, timestamp):
     try:
         picture_name = f"vibration_{timestamp}.jpg"
         picture_path = os.path.join(PICTURE_DIR, picture_name)
-        # Capture and save the image
-        camera.capture_file(picture_path)
+        
+        # Fast capture with optimized settings
+        camera.capture_file(
+            picture_path,
+            format='jpeg',
+            quality=50,          # Balanced quality/size (1-100)
+            thumbnail=None,      # No thumbnail for speed
+            bayer=True           # Faster processing
+        )
+        
         print(f"Picture taken and saved as: {picture_name}")
     except Exception as e:
         print(f"Error taking picture: {str(e)}")
